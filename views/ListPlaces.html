@@ -1,0 +1,152 @@
+{{ define "ListPlaces"}}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clientes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script
+      src="https://unpkg.com/htmx.org@1.9.12"
+      integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+
+  <body>
+    <header class="flex items-center justify-between px-4 py-3 md:px-6 md:py-4">
+      <a class="flex items-center" href="/">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="h-6 w-6"
+        >
+          <path d="m8 3 4 8 5-5 5 15H2L8 3z"></path>
+        </svg>
+        <span class="ml-2 text-lg font-semibold">Fernandinha</span>
+      </a>
+      <nav id="navMenu" class="hidden space-x-4 md:flex">
+        <a class="text-sm font-medium hover:underline" href="/places">
+          Contatos
+        </a>
+        <a class="text-sm font-medium hover:underline" href="/places/new">
+          Buscar
+        </a>
+      </nav>
+      <button
+        id="menuButton"
+        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10 md:hidden"
+        onclick="toggleMenu()"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="h-6 w-6"
+        >
+          <line x1="4" x2="20" y1="12" y2="12"></line>
+          <line x1="4" x2="20" y1="6" y2="6"></line>
+          <line x1="4" x2="20" y1="18" y2="18"></line>
+        </svg>
+        <span class="sr-only">Toggle navigation</span>
+      </button>
+    </header>
+    <main class="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
+      <div class="mb-6">
+        <h1 class="text-3xl font-bold">Contatos</h1>
+        <p class="text-gray-600">
+          Gerencie seus contatos e mantenha o controle de suas interações.
+        </p>
+      </div>
+      <div class="flex flex-wrap gap-6">
+        {{ range . }}
+        <div
+          class="flex-1 min-w-[280px] rounded-lg border bg-card text-card-foreground shadow-sm"
+          data-v0-t="card"
+          id="card"
+        >
+          <div
+            class="flex flex-col gap-4 p-6 min-h-[250px] bg-gray-200 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+          >
+            <div class="flex flex-col gap-2 w-full">
+              <h3 class="font-medium text-sm">{{.Name}}</h3>
+              <h3 class="font-small text-sm">{{.FormattedPhoneNumber}}</h3>
+            </div>
+            <div class="flex flex-col gap-2">
+              <p class="text-gray-600 text-sm">
+                Contact Name: {{if
+                .ContactName}}{{.ContactName}}{{else}}NotAvailable{{end}}
+              </p>
+              <div class="flex items-center gap-2">
+                <input
+                  class="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+                  type="checkbox"
+                  name="Contatado?"
+                  id="contact-checkbox-{{.ID}}"
+                  hx-patch="/place/{{.ID}}"
+                  hx-trigger="change"
+                  {{if
+                  .Contacted}}checked{{end}}
+                />
+                <label
+                  class="text-gray-600 text-sm"
+                  for="contact-checkbox-{{.ID}}"
+                >
+                  Contatado?
+                </label>
+              </div>
+            </div>
+            <div class="flex flex-col gap-2">
+              <a href="/place/{{.ID}}">
+                <span>Ver detalhes</span>
+              </a>
+              <button
+                type="submit"
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:text-accent-foreground h-10 w-10 hover:bg-red-500"
+                hx-delete="/place/{{.ID}}"
+                hx-trigger="click"
+                hx-swap="delete"
+                hx-target="closest #card"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="h-4 w-4"
+                >
+                  <path
+                    d="M3 6h18M5 6v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6m-3 0V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"
+                  ></path>
+                </svg>
+                <span class="sr-only">Deletar Contato</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        {{ end }}
+      </div>
+    </main>
+  </body>
+</html>
+
+{{ end }}

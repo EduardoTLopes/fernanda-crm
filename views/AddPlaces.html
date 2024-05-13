@@ -1,0 +1,73 @@
+{{ define "AddPlaces" }}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fernandinha CRM BUSCA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <div class="flex flex-col items-center h-screen">
+      <a
+        href="/places"
+        class="self-start p-4 text-indigo-600 hover:text-indigo-800"
+      >
+        ← Voltar para todos os contatos
+      </a>
+      <div class="bg-white p-8 rounded-lg shadow-lg max-w-sm">
+        <h1 class="text-center text-2xl font-bold mb-4">
+          Fernandinha CRM BUSCA
+        </h1>
+        <form action="/places/new/" method="POST" class="space-y-4">
+          <div>
+            <label
+              for="latitude"
+              class="block text-sm font-medium text-gray-700"
+              >Latitude</label
+            >
+            <input
+              type="text"
+              id="latitude"
+              name="latitude"
+              placeholder="-23.570892"
+              value="-23.603913"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+          </div>
+          <div>
+            <label
+              for="longitude"
+              class="block text-sm font-medium text-gray-700"
+              >Longitude</label
+            >
+            <input
+              type="text"
+              id="longitude"
+              name="longitude"
+              placeholder="-46.645573"
+              value="-46.646798"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+          </div>
+          <input
+            type="submit"
+            value="Buscar"
+            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          />
+        </form>
+      </div>
+    </div>
+    {{ if .}} {{range .}}
+    <div class="mt-4">
+      <h1 class="text-lg font-semibold">Places added</h1>
+      <a href="/place/{{.ID}}"
+        ><h2 class="text-lg font-semibold">{{.Name}}</h2></a
+      >
+    </div>
+    {{end}} {{end}}
+  </body>
+</html>
+
+{{ end }}
